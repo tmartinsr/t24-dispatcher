@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+    security:
+      oauth2:
+        resourceserver:
+          jwt:
+            issuer-uri: http://localhost:9999/auth/realms/RnetApp
+    cloud:
+        gateway:
+            actuator:
+              verbose:
+                enabled: false
+            routes:
+            - id: api_route
+              uri: http://httpbin.org
+              predicates:
+              - Host=**
+              filters:
+                - name: T24Dispatcher
+
+
+management:
+  server:
+    port: 8081
+  endpoint:
+    gateway:
+      enabled: true
+  health:
+    probes:
+      enabled: true
+    refresh:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,gateway
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.ipc.netty: DEBUG
+    reactor.netty: DEBUG
+    reactor.netty.http.client: DEBUG
+    lu.raiffeisen.t24.dispatcher.filters: DEBUG
+
+            
